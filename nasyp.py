@@ -12,7 +12,6 @@ import cv2 as cv
 
 # Виводження відео
 
-# capture = cv.VideoCapture("Videos/випускний кліп школа №98.mp4")
 capture = cv.VideoCapture(0)
 
 while True:
