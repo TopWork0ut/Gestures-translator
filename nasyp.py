@@ -9,7 +9,7 @@ import cv2 as cv
 
 
 
-
+# 
 # Виводження відео
 
 capture = cv.VideoCapture(0)
