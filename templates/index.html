@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<h1>Nasyp</h1>
+	<div>
+		<img src="{{ url_for('video') }}" width = "50%" alt="">
+	</div>
+	<form action="/" method="get">
+                <!-- <input type="text" name="first_name">  <br />
+                <input type="text" name="last_name" />
+                <input type="submit" name= "form" value="Submit" /> -->
+                <input type="text" name="name" />
+                <input type="submit" name="open" value="Open">
+				<input type="submit" name="close" value="Close">
+    </form>
+</body>
+</html>
