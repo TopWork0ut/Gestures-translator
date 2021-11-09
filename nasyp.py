@@ -3,7 +3,6 @@ from flask import Flask,render_template,Response,request
 
 app = Flask(__name__)
 
-
 # additional
 
 
@@ -27,10 +26,7 @@ def generate_frames():
 
 @app.route('/')
 def index():
-	# if "open" in request.form:
-	# 	key_of_video_capture = 0
-	# if request.method == "GET":
-	# 	key_of_video_capture = 0
+	
 	return render_template("index.html")
 
 @app.route('/video')
