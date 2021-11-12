@@ -23,11 +23,13 @@
     </div>
     <!--   -->
     <div class="CameraCapture"  align= center>
+        {% if getVideo %}
 		<img src="{{ url_for('video') }}" width = "100%" alt="">
-        
-        
-        
+        {% endif %}
 	</div>
+    <form class = "grid" action = "/GetVideo" method = "POST" align=center>
+        <input type = "Submit" class = "submit_button" value = "{{buttonText}}">
+    </form>
 	<div class="Translation"></div>
     <div class="Info">
         <b>About us<p>We are LPNU students and</p> <p>this is our course project</p></b>

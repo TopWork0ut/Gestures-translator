@@ -12,6 +12,8 @@ mp_hands = mp.solutions.hands
 app = Flask(__name__)
 camera = cv2.VideoCapture(0)
 
+getVideo = False
+buttonText = "Allow getting video"
 
 def generate_frames():
 	# while True:
@@ -27,7 +29,6 @@ def generate_frames():
 	with mp_hands.Hands(
 	    min_detection_confidence=0.5,
 	    min_tracking_confidence=0.5) as hands:
-
 	    while camera.isOpened():
 
 	        success, image = camera.read()
@@ -82,13 +83,21 @@ def index():
 	# 	key_of_video_capture = 0
 	# if request.method == "GET":
 	# 	key_of_video_capture = 0
-	return render_template("index.html")
+	return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
 
 @app.route('/video')
 def video():
 	return Response(generate_frames(),mimetype = 'multipart/x-mixed-replace; boundary=image')
 
 
+@app.route('/GetVideo', methods = ['GET', 'POST'])
+def GetVideo():
+	global getVideo, buttonText
+	getVideo = not getVideo
+	buttonText = "Dismiss getting video"
+	if not getVideo:
+		buttonText = "Allow getting video"
+	return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
 
 if __name__ == "__main__" :
 	  app.run(debug = True)
