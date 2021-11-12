@@ -76,4 +76,50 @@ body{
 }
 
 
+.submit_button{
+  margin-top :30px;
+  appearance: none;
+  background-image: linear-gradient(315deg, #f5d020 0%, #f53803 74%);
+  border: 0;
+  border-radius: 6px;
+  box-shadow: #f5d020 0 2px 4px,#f5d020 0 7px 13px -3px,#f5d020 0 -3px 0 inset;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: "JetBrains Mono",monospace;
+  height: 48px;
+  justify-content: center;
+  line-height: 1;
+  list-style: none;
+  overflow: hidden;
+  padding-left: 16px;
+  padding-right: 16px;
+  position: relative;
+  text-align: left;
+  text-decoration: none;
+  transition: box-shadow .15s,transform .15s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+  will-change: box-shadow,transform;
+  font-size: 18px;
+}
+
+.submit_button:focus {
+  box-shadow: #f5d020 0 2px 4px,#f5d020 0 7px 13px -3px,#f5d020 0 -3px 0 inset;
+}
+
+.submit_button:hover {
+  box-shadow: #f5d020 0 2px 4px,#f5d020 0 7px 13px -3px,#f5d020 0 -3px 0 inset;
+  transform: translateY(-2px);
+}
+
+.submit_button:active {
+  box-shadow: #f5d020 0 3px 7px inset;
+  transform: translateY(2px);
+}
+}
+
 
