@@ -1,23 +1,46 @@
-body{
+body{    
+
+    overflow-x: hidden;
+
     margin : 0;
     background: rgb(167, 160, 160);
     font-family: 'Montserrat', sans-serif;
+    justify-content: space-between;
     font-size: 16px;
     line-height: 1.6;
     color: lightgray;
 
 }
-.intro{
- width :100%;
- height:100px;
- background-color :rgb(36, 35, 35);
- display: flex;
- justify-content:space-between;
- font-size: 40px;
- vertical-align: text-top;
+.intro
+{
 
  
+    
+ width :100%;
+ height:85px;
+ background-color :rgb(36, 35, 35);
+ display: flex;
+ justify-content: space-between;
+ 
+ vertical-align: text-top;
+ 
+ 
 }
+
+.gestures_into
+{
+    font-size: 22px;
+ padding-bottom: 55px; 
+}
+
+#image
+{
+ padding-top: 13px;
+ padding-bottom: 55px;   
+ padding-left: 35px;
+}
+
+
 
 .nav{
     font-family:Montserrat;
@@ -69,11 +92,23 @@ body{
 
  background-color :rgb(36, 35, 35);
  display: flex;
- justify-content:space-between;
+ justify-content:space-around;
  font-size: 30px;
  vertical-align: text-top;
  margin: top 5px;
 }
 
+.exeption
+{
+    color: rgb(36, 35, 35) ;
+}
 
+.retreat_left
+{
+    color: rgb(36, 35, 35);
+}
 
+.retreat_right
+{
+    color: rgb(36, 35, 35);
+}
