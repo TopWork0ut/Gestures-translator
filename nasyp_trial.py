@@ -14,17 +14,8 @@ camera = cv2.VideoCapture(0)
 
 
 def generate_frames():
-	# while True:
-	# 	##read the camera frame
-	# 	success,frame = camera.read()
-
-	# 	if not success:
-	# 		break
-	# 	else:
-	# 		ret,buffer = cv2.imencode('.jpg',frame)
-	# 		frame = buffer.tobytes()	
-	# 	yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 	with mp_hands.Hands(
+		max_num_hands = 3,
 	    min_detection_confidence=0.5,
 	    min_tracking_confidence=0.5) as hands:
 
@@ -37,9 +28,10 @@ def generate_frames():
 	        image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
 
 	        image.flags.writeable = False
+ 
+	        results = hands.process(image)
 
 	        
-	        results = hands.process(image)
 
 	        image.flags.writeable = True
 
@@ -49,20 +41,37 @@ def generate_frames():
 	        if results.multi_hand_landmarks:
 	          for hand_landmarks in results.multi_hand_landmarks:
 
+	            # mp_drawing.draw_landmarks(
+	            #     image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 	            mp_drawing.draw_landmarks(
-	                image, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-
-
+	                image, 
+	                hand_landmarks, 
+	                mp_hands.HAND_CONNECTIONS,
+	                mp_drawing.DrawingSpec(
+	                	color=(0, 92, 230),
+	                	thickness=10,
+	                	circle_radius=1
+      				),
+      				mp_drawing.DrawingSpec(
+				        color=(255,255,255),
+				        thickness=2,
+				        circle_radius=2
+      				)	
+	            )
+	            
+	            # print(results.multi_hand_landmarks[0].landmark[mp_hands.HandLandmark.WRIST])
+	            print(results.multi_handedness)
+	            # print(results.multi_hand_landmarks)
 
 	        end = time.time()
 	        totalTime = end - start
+	        if totalTime != 0:
+	       		fps = 1 / totalTime
+	        #print("FPS: ", fps)
 
-	        fps = 1 / totalTime
-	        print("FPS: ", fps)
+	        cv2.putText(image, f'FPS: {int(fps)}', (20,70), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255, 255, 255), 2)
 
-	        cv2.putText(image, f'FPS: {int(fps)}', (20,70), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,255,0), 2)
-
-	        cv2.imshow('MediaPipe Hands', image)
+	        # cv2.imshow('MediaPipe Hands', image)
 
 
 
@@ -78,10 +87,6 @@ def generate_frames():
 
 @app.route('/')
 def index():
-	# if "open" in request.form:
-	# 	key_of_video_capture = 0
-	# if request.method == "GET":
-	# 	key_of_video_capture = 0
 	return render_template("index.html")
 
 @app.route('/video')
