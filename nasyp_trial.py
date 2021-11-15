@@ -9,7 +9,7 @@ from gevent.pywsgi import WSGIServer
 mp_drawing = mp.solutions.drawing_utils
 mp_hands = mp.solutions.hands
 
-app = Flask(__name__)
+app = Flask(__name__)	
 camera = cv2.VideoCapture(0)
 
 getVideo = False
