@@ -13,19 +13,9 @@ app = Flask(__name__)
 camera = cv2.VideoCapture(0)
 
 getVideo = False
-buttonText = "Allow getting video"
+buttonText = "ON"
 
 def generate_frames():
-	# while True:
-	# 	##read the camera frame
-	# 	success,frame = camera.read()
-
-	# 	if not success:
-	# 		break
-	# 	else:
-	# 		ret,buffer = cv2.imencode('.jpg',frame)
-	# 		frame = buffer.tobytes()	
-	# 	yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 	with mp_hands.Hands(
 	    min_detection_confidence=0.5,
 	    min_tracking_confidence=0.5) as hands:
@@ -59,11 +49,11 @@ def generate_frames():
 	        totalTime = end - start
 
 	        fps = 1 / totalTime
-	        print("FPS: ", fps)
+	        # print("FPS: ", fps)
 
 	        cv2.putText(image, f'FPS: {int(fps)}', (20,70), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0,255,0), 2)
 
-	        cv2.imshow('MediaPipe Hands', image)
+	        # cv2.imshow('MediaPipe Hands', image)
 
 
 
@@ -79,10 +69,6 @@ def generate_frames():
 
 @app.route('/')
 def index():
-	# if "open" in request.form:
-	# 	key_of_video_capture = 0
-	# if request.method == "GET":
-	# 	key_of_video_capture = 0
 	return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
 
 @app.route('/video')
@@ -94,9 +80,9 @@ def video():
 def GetVideo():
 	global getVideo, buttonText
 	getVideo = not getVideo
-	buttonText = "Dismiss getting video"
+	buttonText = "OFF"
 	if not getVideo:
-		buttonText = "Allow getting video"
+		buttonText = "ON"
 	return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
 
 if __name__ == "__main__" :
