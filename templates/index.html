@@ -11,41 +11,70 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <title>NASYP</title>
 </head>
-<body>
-    <div class="intro">
+<body >
+    <div class="header">
+         <a href="#">
+            <img id="image" src="static\images\logo2.png" > 
+         </a>   
         
-     <img src="static\images\logo.png" height="90">
-     <p>Gestures into Text</p> 
-    <p>Audio to Text </p>
-     
-
-    
+         <ul class="menu">
+             <li><a href="">Functions</a>
+                <ul>
+                    <li><a href="">Audio to text</a></li>
+                    <li><a href="">Translator</a></li>
+                    <li><a href="">Gestures to text</a></li>
+                </ul>
+             </li>
+             <li><a href="">Information</a>
+                <ul>
+                    <li><a href="">How it works?</a></li>
+                    <li><a href="">About us</a></li>
+                    <li><a href="">Ideas</a></li>
+                    <li><a href="">Poll</a></li>
+                    <li><a href="">Donate</a></li>
+                </ul>
+             </li>
+             <li><a href="">Contact us</a>
+                <ul>
+                    <li><a href="">phone call</a></li>
+                    <li><a href="">email</a></li>
+                </ul>
+             </li>
+         </ul>
     </div>
-    <!--   -->
-    <div class="CameraCapture"  align= center>
-        {% if getVideo %}
-		<img src="{{ url_for('video') }}" width = "100%" alt="">
-        {% endif %}
-	</div>
-    <form class = "grid" action = "/GetVideo" method = "POST" align=center>
-        <input type = "Submit" class = "submit_button" value = "{{buttonText}}">
-    </form>
-	<div class="Translation"></div>
+
+    <div class="background">
+        <!-- <img id="image-a" src="static\images\a-nasyp.png" >  -->
+        <div class="CameraCapture"  align= center>
+            {% if getVideo %}
+        	<img src="{{ url_for('video') }}" width = "100%" alt="">
+            {% endif %}
+        </div>
+
+        <form class = "grid" action = "/GetVideo" method = "POST" align=center>
+            <input type = "Submit" class = "submit_button" value = "{{buttonText}}">
+        </form>
+       
+        <!-- <form class = "grid" action = "/GetVideo" method = "POST" align=center>
+            <input type = "Submit" class = "submit_button" value = "{{buttonText}}">
+        </form> -->
+    	<!-- <div class="Translation"> -->
+        <input class="Translation" type="text" id="name" name="name" required
+       minlength="0" maxlength="1000" size="50" value = "{{translatedGestures}}">
+        <!-- </div> -->
+    </div>
+    
     <div class="Info">
-        <b>About us<p>We are LPNU students and</p> <p>this is our course project</p></b>
-        <b>Our Contacts<div><p>Instagram</p>
-            <p>Twitter</p>
-            <p>Facebook</p>
-        
-        </div></b>
-        <b>Donations<p>Debit card:</p></div></b>
-
-    
-    <!-- <div class="Info2"> -->
-        
-        
-        
-
+        <ul class = "ul_info" >
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">© 2021 NÁSYP™️</a></li>
+            <li class = "info_language"><a href="#">Language</a></li>
+        </ul>                   
     </div>
+
 </body>
 </html>
