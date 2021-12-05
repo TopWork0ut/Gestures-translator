@@ -26,7 +26,10 @@ gesture_exist = False
 getVideo = False
 buttonText = "ON"
 queue = []
+outputList = []
+last_gesture = ["", 0]
 MAXIMUM_NUMBER_OF_CHARACTERS = 1000
+REQ_REPS = 5
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -523,12 +526,16 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
         info_text = info_text + ':' + hand_sign_text
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
-    cnt = 0
-    if len(queue) > 0 and queue[len(queue)-1][0] == hand_sign_text:
-        cnt = queue[len(queue)-1][1] + 1
-    if cnt < 1:
-        queue.append([hand_sign_text, cnt])
-        showText()
+    global last_gesture
+    if hand_sign_text != last_gesture[0]:
+        last_gesture = [hand_sign_text, 1]
+    else:
+        if last_gesture[1] + 1 == REQ_REPS:
+            outputList.append(hand_sign_text)
+            last_gesture = ["", 0]
+            showText()
+        else:
+            last_gesture[1] += 1
     if finger_gesture_text != "":
         cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
                    cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
@@ -602,31 +609,24 @@ def GetVideo():
     return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
 
 def showText():
-    global translatedGestures
+    global translatedGestures, outputList
     numberOfCharacters = 0
-    index = len(queue) - 1
+    index = len(outputList) - 1
     translatedGestures = ""
-    while index > -1 and numberOfCharacters < MAXIMUM_NUMBER_OF_CHARACTERS:
-        if numberOfCharacters + 1 + len(queue[index][0]) <= MAXIMUM_NUMBER_OF_CHARACTERS:
-            j = len(queue[index][0]) - 1
-            numberOfCharacters += j + 2
-            while j > -1:
-                translatedGestures += queue[index][0][j]
-                j -= 1
-            translatedGestures += ' '
-        else: break
+    while index > -1 and numberOfCharacters + len(outputList[index]) <= MAXIMUM_NUMBER_OF_CHARACTERS:
+        i = len(outputList[index]) - 1
+        while i > -1:
+            translatedGestures += outputList[index][i]
+            i -= 1
+        numberOfCharacters += len(outputList[index])
         index -= 1
     while index > -1:
-        del queue[index]
+        del outputList[index]
         index -= 1
-    r = len(translatedGestures)-1
-    s = list(translatedGestures)
+    tmp_string = list(translatedGestures)
     translatedGestures = ""
-    while r >-1 :
-        if (s[r] != s[r - 1]) and (s[r - 1] != s[r - 2] ):
-            translatedGestures += s[r]
-        r -= 1
+    for i in range(len(tmp_string)-1, -1, -1):
+        translatedGestures += tmp_string[i]
     print(translatedGestures)
-
 if __name__ == "__main__" :
       app.run(debug = True)
