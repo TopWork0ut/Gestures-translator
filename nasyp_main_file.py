@@ -599,9 +599,10 @@ def stuff():
 
 @app.route('/GetVideo', methods = ['GET', 'POST'])
 def GetVideo():
-    global getVideo, buttonText
+    global getVideo, buttonText, translatedGestures
     getVideo = not getVideo
     buttonText = "OFF"
+    translatedGestures = ""
     if not getVideo:
         buttonText = "ON"
     # if buttonText == "OFF":
