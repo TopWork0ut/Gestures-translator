@@ -160,7 +160,12 @@ a:hover{
     text-align: start;
     margin-bottom: 100px;
     background: #f0f0f5;
+
 }   
+
+#result{
+    color: #000000;
+}
 
 .Info{
     width :100%;
