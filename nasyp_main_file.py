@@ -16,14 +16,17 @@ from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
 
-from flask import Flask,render_template,Response,request
-
+from flask import Flask,render_template,Response,request,jsonify
+import time
 
 app = Flask(__name__)   
 camera = cv.VideoCapture(0)
 
+gesture_exist = False
 getVideo = False
 buttonText = "ON"
+queue = []
+MAXIMUM_NUMBER_OF_CHARACTERS = 1000
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -184,7 +187,7 @@ def main():
         debug_image = draw_info(debug_image, fps, mode, number)
 
         # Screen reflection #############################################################
-        cv.imshow('Hand Gesture Recognition', debug_image)
+        # cv.imshow('Hand Gesture Recognition', debug_image)
         if cv.waitKey(5) & 0xFF == 27:
                 break
         if not ret:
@@ -513,13 +516,19 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
                    finger_gesture_text):
     cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[1] - 22),
                  (0, 0, 0), -1)
-
+    global gesture_exist
+    gesture_exist = True 
     info_text = handedness.classification[0].label[0:]
     if hand_sign_text != "":
         info_text = info_text + ':' + hand_sign_text
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
-
+    cnt = 0
+    if len(queue) > 0 and queue[len(queue)-1][0] == hand_sign_text:
+        cnt = queue[len(queue)-1][1] + 1
+    if cnt < 1:
+        queue.append([hand_sign_text, cnt])
+        showText()
     if finger_gesture_text != "":
         cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
                    cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
@@ -569,6 +578,17 @@ def index():
 def video():
     return Response(main(),mimetype = 'multipart/x-mixed-replace; boundary=image')
 
+translatedGestures = ""
+
+
+
+@app.route('/_stuff', methods = ['GET'])
+def stuff():
+        
+    # return jsonify(result=time.time())
+    # if gesture_exist == True:
+        return jsonify(result = translatedGestures)
+
 
 @app.route('/GetVideo', methods = ['GET', 'POST'])
 def GetVideo():
@@ -577,7 +597,36 @@ def GetVideo():
     buttonText = "OFF"
     if not getVideo:
         buttonText = "ON"
+    # if buttonText == "OFF":
+    #     return jsonify(result=time.time())
     return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
+
+def showText():
+    global translatedGestures
+    numberOfCharacters = 0
+    index = len(queue) - 1
+    translatedGestures = ""
+    while index > -1 and numberOfCharacters < MAXIMUM_NUMBER_OF_CHARACTERS:
+        if numberOfCharacters + 1 + len(queue[index][0]) <= MAXIMUM_NUMBER_OF_CHARACTERS:
+            j = len(queue[index][0]) - 1
+            numberOfCharacters += j + 2
+            while j > -1:
+                translatedGestures += queue[index][0][j]
+                j -= 1
+            translatedGestures += ' '
+        else: break
+        index -= 1
+    while index > -1:
+        del queue[index]
+        index -= 1
+    r = len(translatedGestures)-1
+    s = list(translatedGestures)
+    translatedGestures = ""
+    while r >-1 :
+        if (s[r] != s[r - 1]) and (s[r - 1] != s[r - 2] ):
+            translatedGestures += s[r]
+        r -= 1
+    print(translatedGestures)
 
 if __name__ == "__main__" :
       app.run(debug = True)

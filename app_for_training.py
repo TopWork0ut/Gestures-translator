@@ -16,15 +16,6 @@ from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
 
-from flask import Flask,render_template,Response,request
-
-
-app = Flask(__name__)   
-camera = cv.VideoCapture(0)
-
-getVideo = False
-buttonText = "ON"
-
 def get_args():
     parser = argparse.ArgumentParser()
 
@@ -185,23 +176,14 @@ def main():
 
         # Screen reflection #############################################################
         cv.imshow('Hand Gesture Recognition', debug_image)
-        if cv.waitKey(5) & 0xFF == 27:
-                break
-        if not ret:
-                break
-        else:
-                ret,buffer = cv.imencode('.jpg',debug_image)
-                debug_image = buffer.tobytes()    
-        yield(b'--image\r\n' b'Content-Type: image/jpeg\r\n\r\n' + debug_image + b'\r\n')
+
     cap.release()
-    # cv.destroyAllWindows()
+    cv.destroyAllWindows()
 
 
 def select_mode(key, mode):
     number = -1
-    if key == 45:
-        number = 11
-    if 48 <= key <=100:  # 0 ~ 9
+    if 48 <= key <= 57:  # 0 ~ 9
         number = key - 48
     if key == 110:  # n
         mode = 0
@@ -299,12 +281,12 @@ def pre_process_point_history(image, point_history):
 def logging_csv(number, mode, landmark_list, point_history_list):
     if mode == 0:
         pass
-    if mode == 1 and (0 <= number <= 100):
+    if mode == 1 and (0 <= number <= 9):
         csv_path = 'model/keypoint_classifier/keypoint.csv'
         with open(csv_path, 'a', newline="") as f:
             writer = csv.writer(f)
             writer.writerow([number, *landmark_list])
-    if mode == 2 and (0 <= number <= 100):
+    if mode == 2 and (0 <= number <= 9):
         csv_path = 'model/point_history_classifier/point_history.csv'
         with open(csv_path, 'a', newline="") as f:
             writer = csv.writer(f)
@@ -412,87 +394,87 @@ def draw_landmarks(image, landmark_point):
 
     # Key Points
     for index, landmark in enumerate(landmark_point):
-        if index == 0:  
+        if index == 0:  # 手首1
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 1:  
+        if index == 1:  # 手首2
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 2: 
+        if index == 2:  # 親指：付け根
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 3:  
+        if index == 3:  # 親指：第1関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 4: 
+        if index == 4:  # 親指：指先
             cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 8, (0, 0, 0), 1)
-        if index == 5:  
+        if index == 5:  # 人差指：付け根
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 6:  
+        if index == 6:  # 人差指：第2関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 7:  
+        if index == 7:  # 人差指：第1関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 8:  
+        if index == 8:  # 人差指：指先
             cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 8, (0, 0, 0), 1)
-        if index == 9:  
+        if index == 9:  # 中指：付け根
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 10:  
+        if index == 10:  # 中指：第2関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 11:  
+        if index == 11:  # 中指：第1関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 12: 
+        if index == 12:  # 中指：指先
             cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 8, (0, 0, 0), 1)
-        if index == 13:  
+        if index == 13:  # 薬指：付け根
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 14:  
+        if index == 14:  # 薬指：第2関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 15: 
+        if index == 15:  # 薬指：第1関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 16: 
+        if index == 16:  # 薬指：指先
             cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 8, (0, 0, 0), 1)
-        if index == 17:  
+        if index == 17:  # 小指：付け根
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 18:  
+        if index == 18:  # 小指：第2関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 19:  
+        if index == 19:  # 小指：第1関節
             cv.circle(image, (landmark[0], landmark[1]), 5, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 5, (0, 0, 0), 1)
-        if index == 20:  
+        if index == 20:  # 小指：指先
             cv.circle(image, (landmark[0], landmark[1]), 8, (255, 255, 255),
                       -1)
             cv.circle(image, (landmark[0], landmark[1]), 8, (0, 0, 0), 1)
@@ -557,27 +539,5 @@ def draw_info(image, fps, mode, number):
     return image
 
 
-# if __name__ == '__main__':
-#     main()
-
-
-@app.route('/')
-def index():
-    return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
-
-@app.route('/video')
-def video():
-    return Response(main(),mimetype = 'multipart/x-mixed-replace; boundary=image')
-
-
-@app.route('/GetVideo', methods = ['GET', 'POST'])
-def GetVideo():
-    global getVideo, buttonText
-    getVideo = not getVideo
-    buttonText = "OFF"
-    if not getVideo:
-        buttonText = "ON"
-    return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
-
-if __name__ == "__main__" :
-      app.run(debug = True)
+if __name__ == '__main__':
+    main()
