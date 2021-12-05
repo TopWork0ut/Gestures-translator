@@ -68,7 +68,8 @@ def main():
     use_brect = True
 
     # Camera preparation ###############################################################
-    cap = cv.VideoCapture(cap_device)
+    #cap = cv.VideoCapture(cap_device)
+    cap = cv.VideoCapture('video/source.mp4')
     cap.set(cv.CAP_PROP_FRAME_WIDTH, cap_width)
     cap.set(cv.CAP_PROP_FRAME_HEIGHT, cap_height)
 
@@ -626,8 +627,13 @@ def showText():
         index -= 1
     tmp_string = list(translatedGestures)
     translatedGestures = ""
+    cnt = 0
     for i in range(len(tmp_string)-1, -1, -1):
         translatedGestures += tmp_string[i]
+        cnt += 1
+        if cnt == 81:
+            translatedGestures += '\n'
+            cnt = 0
     print(translatedGestures)
 if __name__ == "__main__" :
       app.run(debug = True)
