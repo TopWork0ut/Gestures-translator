@@ -626,8 +626,12 @@ def showText():
         index -= 1
     tmp_string = list(translatedGestures)
     translatedGestures = ""
+    cnt = 0
     for i in range(len(tmp_string)-1, -1, -1):
         translatedGestures += tmp_string[i]
-    print(translatedGestures)
+        cnt += 1
+        if cnt == 88:
+            translatedGestures += '\n';
+            cnt = 0
 if __name__ == "__main__" :
       app.run(debug = True)
