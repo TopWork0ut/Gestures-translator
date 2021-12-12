@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 import csv
 import copy
@@ -20,7 +20,7 @@ from flask import Flask,render_template,Response,request,jsonify
 import time
 
 app = Flask(__name__)   
-camera = cv.VideoCapture(0)
+camera = cv.VideoCapture(1000)
 
 gesture_exist = False
 getVideo = False
@@ -29,7 +29,7 @@ queue = []
 outputList = []
 last_gesture = ["", 0]
 MAXIMUM_NUMBER_OF_CHARACTERS = 1000
-REQ_REPS = 5
+REQ_REPS = 18
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -591,10 +591,7 @@ translatedGestures = ""
 
 @app.route('/_stuff', methods = ['GET'])
 def stuff():
-        
-    # return jsonify(result=time.time())
-    # if gesture_exist == True:
-        return jsonify(result = translatedGestures)
+    return jsonify(result = translatedGestures)
 
 
 @app.route('/GetVideo', methods = ['GET', 'POST'])
@@ -605,9 +602,7 @@ def GetVideo():
     translatedGestures = ""
     if not getVideo:
         buttonText = "ON"
-    # if buttonText == "OFF":
-    #     return jsonify(result=time.time())
-    return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
+    return render_template("index.html", getVideo = getVideo, buttonText = buttonText, translatedGestures= translatedGestures)
 
 def showText():
     global translatedGestures, outputList
@@ -630,8 +625,8 @@ def showText():
     for i in range(len(tmp_string)-1, -1, -1):
         translatedGestures += tmp_string[i]
         cnt += 1
-        if cnt == 88:
-            translatedGestures += '\n';
+        if cnt == 62:
+            translatedGestures += '\n'
             cnt = 0
 if __name__ == "__main__" :
       app.run(debug = True)
