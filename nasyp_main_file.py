@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+
 # -*- coding: utf-8 -*-
 import csv
 import copy
@@ -16,14 +16,20 @@ from model import KeyPointClassifier
 from model import PointHistoryClassifier
 
 
-from flask import Flask,render_template,Response,request
-
+from flask import Flask,render_template,Response,request,jsonify
+import time
 
 app = Flask(__name__)   
-camera = cv.VideoCapture(0)
+camera = cv.VideoCapture(1000)
 
+gesture_exist = False
 getVideo = False
 buttonText = "ON"
+queue = []
+outputList = []
+last_gesture = ["", 0]
+MAXIMUM_NUMBER_OF_CHARACTERS = 1000
+REQ_REPS = 18
 
 def get_args():
     parser = argparse.ArgumentParser()
@@ -184,7 +190,7 @@ def main():
         debug_image = draw_info(debug_image, fps, mode, number)
 
         # Screen reflection #############################################################
-        cv.imshow('Hand Gesture Recognition', debug_image)
+        # cv.imshow('Hand Gesture Recognition', debug_image)
         if cv.waitKey(5) & 0xFF == 27:
                 break
         if not ret:
@@ -513,13 +519,23 @@ def draw_info_text(image, brect, handedness, hand_sign_text,
                    finger_gesture_text):
     cv.rectangle(image, (brect[0], brect[1]), (brect[2], brect[1] - 22),
                  (0, 0, 0), -1)
-
+    global gesture_exist
+    gesture_exist = True 
     info_text = handedness.classification[0].label[0:]
     if hand_sign_text != "":
         info_text = info_text + ':' + hand_sign_text
     cv.putText(image, info_text, (brect[0] + 5, brect[1] - 4),
                cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv.LINE_AA)
-
+    global last_gesture
+    if hand_sign_text != last_gesture[0]:
+        last_gesture = [hand_sign_text, 1]
+    else:
+        if last_gesture[1] + 1 == REQ_REPS:
+            outputList.append(hand_sign_text)
+            last_gesture = ["", 0]
+            showText()
+        else:
+            last_gesture[1] += 1
     if finger_gesture_text != "":
         cv.putText(image, "Finger Gesture:" + finger_gesture_text, (10, 60),
                    cv.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 0), 4, cv.LINE_AA)
@@ -569,15 +585,48 @@ def index():
 def video():
     return Response(main(),mimetype = 'multipart/x-mixed-replace; boundary=image')
 
+translatedGestures = ""
+
+
+
+@app.route('/_stuff', methods = ['GET'])
+def stuff():
+    return jsonify(result = translatedGestures)
+
 
 @app.route('/GetVideo', methods = ['GET', 'POST'])
 def GetVideo():
-    global getVideo, buttonText
+    global getVideo, buttonText, translatedGestures
     getVideo = not getVideo
     buttonText = "OFF"
+    translatedGestures = ""
     if not getVideo:
         buttonText = "ON"
-    return render_template("index.html", getVideo = getVideo, buttonText = buttonText)
+    return render_template("index.html", getVideo = getVideo, buttonText = buttonText, translatedGestures= translatedGestures)
 
+def showText():
+    global translatedGestures, outputList
+    numberOfCharacters = 0
+    index = len(outputList) - 1
+    translatedGestures = ""
+    while index > -1 and numberOfCharacters + len(outputList[index]) <= MAXIMUM_NUMBER_OF_CHARACTERS:
+        i = len(outputList[index]) - 1
+        while i > -1:
+            translatedGestures += outputList[index][i]
+            i -= 1
+        numberOfCharacters += len(outputList[index])
+        index -= 1
+    while index > -1:
+        del outputList[index]
+        index -= 1
+    tmp_string = list(translatedGestures)
+    translatedGestures = ""
+    cnt = 0
+    for i in range(len(tmp_string)-1, -1, -1):
+        translatedGestures += tmp_string[i]
+        cnt += 1
+        if cnt == 62:
+            translatedGestures += '\n'
+            cnt = 0
 if __name__ == "__main__" :
       app.run(debug = True)

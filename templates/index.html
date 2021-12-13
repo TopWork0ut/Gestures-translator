@@ -1,22 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href = "C:\Users\Razer\Desktop\Gestures-translator\static\style.css"> -->
+    <link rel="stylesheet" href = "{{ url_for('static', filename = 'style.css')}}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>NASYP</title>
+    <title>jQuery Example</title>
+<script type="text/javascript"
+  src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript">
+  var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+</script>
 </head>
-<body>
-	<h1>Nasyp</h1>
-	<div>
-		<img src="{{ url_for('video') }}" width = "50%" alt="">
-	</div>
-	<form action="/" method="get">
-                <!-- <input type="text" name="first_name">  <br />
-                <input type="text" name="last_name" />
-                <input type="submit" name= "form" value="Submit" /> -->
-                <input type="text" name="name" />
-                <input type="submit" name="open" value="Open">
-				<input type="submit" name="close" value="Close">
-    </form>
+<body >
+    <div class="header">
+         <a href="#">
+            <img id="image" src="static\images\logo2.png" > 
+         </a>   
+        
+         <ul class="menu">
+             <li><a href="">Functions</a>
+                <ul>
+                    <li><a href="">Audio to text</a></li>
+                    <li><a href="">Translator</a></li>
+                    <li><a href="">Gestures to text</a></li>
+                </ul>
+             </li>
+             <li><a href="">Information</a>
+                <ul>
+                    <li><a href="">How it works?</a></li>
+                    <li><a href="">About us</a></li>
+                    <li><a href="">Ideas</a></li>
+                    <li><a href="">Poll</a></li>
+                    <li><a href="">Donate</a></li>
+                </ul>
+             </li>
+             <li><a href="">Contact us</a>
+                <ul>
+                    <li><a href="">phone call</a></li>
+                    <li><a href="">email</a></li>
+                </ul>
+             </li>
+         </ul>
+    </div>
+
+    <div class="background">
+        <!-- <img id="image-a" src="static\images\a-nasyp.png" >  -->
+        <div class="CameraCapture"  align = center>
+            {% if getVideo %}
+            <img src="{{ url_for('video') }}" width = "100%" alt="">
+            {% endif %}
+        </div>
+
+        <form class = "grid" action = "/GetVideo" method = "POST" align = center>
+            <input type = "Submit" class = "submit_button" value = "{{buttonText}}">
+        </form>
+        
+        <!-- audio -->
+
+        <!-- <body class="container pt-5 bg-dark">
+            <div class="mt-4" id="div_language">
+              <h2 class="mb-3 text-light">Select Language</h2>
+              <select class="form-select bg-secondary text-light" id="select_language" onchange="updateCountry()"></select>
+              <select class="form-select bg-secondary text-light mt-2" id="select_dialect"></select> 
+            </div>
+            <h2 class="mt-4 text-light">Transcript</h2>
+            <div class="p-3" style="border: 1px solid gray; height: 300px; border-radius: 8px;">
+               <span id="final" class="text-light"></span> -->
+              <!-- <span id="interim" class="text-secondary"></span> -->
+            <!-- </div>
+            <div class="mt-4">
+              <button class="btn btn-success" id="start">Start</button>
+              <button class="btn btn-danger" id="stop">Stop</button>
+              <p id="status" class="lead mt-3 text-light" style="display: none">Listenting ...</p>
+            </div>
+        </body>  -->
+        
+        <!-- <script>
+            if ("webkitSpeechRecognition" in window) {
+            let speechRecognition = new webkitSpeechRecognition();
+            let final_transcript = "";
+
+            speechRecognition.continuous = true;
+            speechRecognition.interimResults = true;
+            speechRecognition.lang = document.querySelector("#select_dialect").value;
+
+            speechRecognition.onstart = () => {
+                document.querySelector("#status").style.display = "block";
+            };
+            speechRecognition.onerror = () => {
+                document.querySelector("#status").style.display = "none";
+                console.log("Speech Recognition Error");
+            };
+            speechRecognition.onend = () => {
+                document.querySelector("#status").style.display = "none";
+                console.log("Speech Recognition Ended");
+            };
+
+            speechRecognition.onresult = (event) => {
+                let interim_transcript = "";
+
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    final_transcript += event.results[i][0].transcript;
+                } else {
+                    interim_transcript += event.results[i][0].transcript;
+                }
+                }
+                document.querySelector("#result").innerHTML = final_transcript;
+                document.querySelector("#result").innerHTML = interim_transcript;
+            };
+
+            document.querySelector("#start").onclick = () => {
+                speechRecognition.start();
+            };
+            document.querySelector("#stop").onclick = () => {
+                speechRecognition.stop();
+            };
+            } else {
+            console.log("Speech Recognition Not Available");
+            }
+        </script>
+        
+        <script>
+            var langs =
+            [['Ukranian',      ['uk-UA']],
+            ['Afrikaans',      ['af-ZA']],
+            ['Bahasa Indonesia',['id-ID']],
+            ['Bahasa Melayu',   ['ms-MY']],
+            ['Català',          ['ca-ES']],
+            ['Čeština',         ['cs-CZ']],
+            ['Deutsch',         ['de-DE']],
+            ['English',         ['en-AU', 'Australia'],
+                                ['en-CA', 'Canada'],
+                                ['en-IN', 'India'],
+                                ['en-NZ', 'New Zealand'],
+                                ['en-ZA', 'South Africa'],
+                                ['en-GB', 'United Kingdom'],
+                                ['en-US', 'United States']],
+            ['Español',         ['es-AR', 'Argentina'],
+                                ['es-BO', 'Bolivia'],
+                                ['es-CL', 'Chile'],
+                                ['es-CO', 'Colombia'],
+                                ['es-CR', 'Costa Rica'],
+                                ['es-EC', 'Ecuador'],
+                                ['es-SV', 'El Salvador'],
+                                ['es-ES', 'España'],
+                                ['es-US', 'Estados Unidos'],
+                                ['es-GT', 'Guatemala'],
+                                ['es-HN', 'Honduras'],
+                                ['es-MX', 'México'],
+                                ['es-NI', 'Nicaragua'],
+                                ['es-PA', 'Panamá'],
+                                ['es-PY', 'Paraguay'],
+                                ['es-PE', 'Perú'],
+                                ['es-PR', 'Puerto Rico'],
+                                ['es-DO', 'República Dominicana'],
+                                ['es-UY', 'Uruguay'],
+                                ['es-VE', 'Venezuela']],
+            ['Euskara',         ['eu-ES']],
+            ['Français',        ['fr-FR']],
+            ['Galego',          ['gl-ES']],
+            ['Hrvatski',        ['hr_HR']],
+            ['IsiZulu',         ['zu-ZA']],
+            ['Íslenska',        ['is-IS']],
+            ['Italiano',        ['it-IT', 'Italia'],
+                                ['it-CH', 'Svizzera']],
+            ['Magyar',          ['hu-HU']],
+            ['Nederlands',      ['nl-NL']],
+            ['Norsk bokmål',    ['nb-NO']],
+            ['Polski',          ['pl-PL']],
+            ['Português',       ['pt-BR', 'Brasil'],
+                                ['pt-PT', 'Portugal']],
+            ['Română',          ['ro-RO']],
+            ['Slovenčina',      ['sk-SK']],
+            ['Suomi',           ['fi-FI']],
+            ['Svenska',         ['sv-SE']],
+            ['Türkçe',          ['tr-TR']],
+            ['български',       ['bg-BG']],
+            ['Pусский',         ['ru-RU']],
+            ['Српски',          ['sr-RS']],
+            ['한국어',            ['ko-KR']],
+            ['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'],
+                                ['cmn-Hans-HK', '普通话 (香港)'],
+                                ['cmn-Hant-TW', '中文 (台灣)'],
+                                ['yue-Hant-HK', '粵語 (香港)']],
+            ['日本語',           ['ja-JP']],
+            ['Lingua latīna',   ['la']]];
+
+            let select_language = document.querySelector('#select_language');
+            let select_dialect = document.querySelector('#select_dialect');
+
+            for (var i = 0; i < langs.length; i++) {
+            select_language.options[i] = new Option(langs[i][0], i);
+            }
+
+            select_language.selectedIndex = 6;
+            updateCountry();
+            select_dialect.selectedIndex = 6;
+
+            function updateCountry() {
+            for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+                select_dialect.remove(i);
+            }
+            var list = langs[select_language.selectedIndex];
+            for (var i = 1; i < list.length; i++) {
+                select_dialect.options.add(new Option(list[i][1], list[i][0]));
+            }
+            select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+            }
+
+
+        </script> -->
+
+        <!-- Translation_left_side -->
+            
+        <div class="Translation">
+            <div class="Translation_left">
+                {% if getVideo %}
+                <script type="text/javascript">
+                var intervalID = setInterval(update_values,100);
+
+                function update_values() {
+                        $.getJSON($SCRIPT_ROOT + '/_stuff',
+                            
+                    function(data) {
+                        $('#result').text(data.result);
+                        console.log(data)
+                    });
+                    
+                    };
+                
+                    
+                    
+                    function stopTextColor() {
+                    clearInterval(intervalID);
+                    }
+                    
+                </script>
+                <body onload="update_values();">
+                <!-- <h1>Dynamic Update</h1> -->
+                <p>
+                    <span id="result">?</span> 
+                <script>
+                document.getElementById("result").innerHTML;
+                </script>
+                        <!-- <button onclick="stopTextColor();">Stop</button> -->
+                </body>
+                {% endif %} 
+            </div>
+
+            <!-- Translation_right_side -->
+            
+            <div class="Translation_right">
+                <div class="mt-4" id="div_language">
+                    <h2 class="mb-3 text-light" style="color:black; text-align: center;" >Select Language</h2>
+                    <select class="form-select bg-secondary text-light" id="select_language" onchange="updateCountry()"></select>
+                    <select class="form-select bg-secondary text-light mt-2" id="select_dialect"></select> 
+                </div>
+                <h2 class="mt-4 text-light" style="color:black; text-align: center;">Transcript</h2>
+                <div class="p-3" style="border: 1px solid rgb(0, 0, 0); height: 300px; border-radius: 8px; color:black; width: 280px; justify-content: center;" >
+                    <span id="final" class="text-light"></span> -->
+                    <span id="interim" class="text-secondary"></span>
+                </div>
+                <div class="mt-4">
+                    <button class="btn btn-success" id="start" style="color:black; justify-content: center;">Start</button>
+                    <button class="btn btn-danger" id="stop" style="color:black;justify-content: center;">Stop</button>
+                    <p id="status" class="lead mt-3 text-light" style="display: none">Listenting ...</p>
+                </div>
+
+
+
+                <script>
+                    if ("webkitSpeechRecognition" in window) {
+                    let speechRecognition = new webkitSpeechRecognition();
+                    let final_transcript = "";
+        
+                    speechRecognition.continuous = true;
+                    speechRecognition.interimResults = true;
+                    speechRecognition.lang = document.querySelector("#select_dialect").value;
+        
+                    speechRecognition.onstart = () => {
+                        document.querySelector("#status").style.display = "block";
+                    };
+                    speechRecognition.onerror = () => {
+                        document.querySelector("#status").style.display = "none";
+                        console.log("Speech Recognition Error");
+                    };
+                    speechRecognition.onend = () => {
+                        document.querySelector("#status").style.display = "none";
+                        console.log("Speech Recognition Ended");
+                    };
+        
+                    speechRecognition.onresult = (event) => {
+                        let interim_transcript = "";
+        
+                        for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            final_transcript += event.results[i][0].transcript;
+                        } else {
+                            interim_transcript += event.results[i][0].transcript;
+                        }
+                        }
+                        document.querySelector("#final").innerHTML = final_transcript;
+                        document.querySelector("#interim").innerHTML = interim_transcript;
+                    };
+        
+                    document.querySelector("#start").onclick = () => {
+                        speechRecognition.start();
+                    };
+                    document.querySelector("#stop").onclick = () => {
+                        speechRecognition.stop();
+                    };
+                    } else {
+                    console.log("Speech Recognition Not Available");
+                    }
+                </script>
+                
+                <script>
+                    var langs =
+                    [['Ukranian',      ['uk-UA']],
+                    ['Afrikaans',      ['af-ZA']],
+                    ['Bahasa Indonesia',['id-ID']],
+                    ['Bahasa Melayu',   ['ms-MY']],
+                    ['Català',          ['ca-ES']],
+                    ['Čeština',         ['cs-CZ']],
+                    ['Deutsch',         ['de-DE']],
+                    ['English',         ['en-AU', 'Australia'],
+                                        ['en-CA', 'Canada'],
+                                        ['en-IN', 'India'],
+                                        ['en-NZ', 'New Zealand'],
+                                        ['en-ZA', 'South Africa'],
+                                        ['en-GB', 'United Kingdom'],
+                                        ['en-US', 'United States']],
+                    ['Español',         ['es-AR', 'Argentina'],
+                                        ['es-BO', 'Bolivia'],
+                                        ['es-CL', 'Chile'],
+                                        ['es-CO', 'Colombia'],
+                                        ['es-CR', 'Costa Rica'],
+                                        ['es-EC', 'Ecuador'],
+                                        ['es-SV', 'El Salvador'],
+                                        ['es-ES', 'España'],
+                                        ['es-US', 'Estados Unidos'],
+                                        ['es-GT', 'Guatemala'],
+                                        ['es-HN', 'Honduras'],
+                                        ['es-MX', 'México'],
+                                        ['es-NI', 'Nicaragua'],
+                                        ['es-PA', 'Panamá'],
+                                        ['es-PY', 'Paraguay'],
+                                        ['es-PE', 'Perú'],
+                                        ['es-PR', 'Puerto Rico'],
+                                        ['es-DO', 'República Dominicana'],
+                                        ['es-UY', 'Uruguay'],
+                                        ['es-VE', 'Venezuela']],
+                    ['Euskara',         ['eu-ES']],
+                    ['Français',        ['fr-FR']],
+                    ['Galego',          ['gl-ES']],
+                    ['Hrvatski',        ['hr_HR']],
+                    ['IsiZulu',         ['zu-ZA']],
+                    ['Íslenska',        ['is-IS']],
+                    ['Italiano',        ['it-IT', 'Italia'],
+                                        ['it-CH', 'Svizzera']],
+                    ['Magyar',          ['hu-HU']],
+                    ['Nederlands',      ['nl-NL']],
+                    ['Norsk bokmål',    ['nb-NO']],
+                    ['Polski',          ['pl-PL']],
+                    ['Português',       ['pt-BR', 'Brasil'],
+                                        ['pt-PT', 'Portugal']],
+                    ['Română',          ['ro-RO']],
+                    ['Slovenčina',      ['sk-SK']],
+                    ['Suomi',           ['fi-FI']],
+                    ['Svenska',         ['sv-SE']],
+                    ['Türkçe',          ['tr-TR']],
+                    ['български',       ['bg-BG']],
+                    ['Pусский',         ['ru-RU']],
+                    ['Српски',          ['sr-RS']],
+                    ['한국어',            ['ko-KR']],
+                    ['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'],
+                                        ['cmn-Hans-HK', '普通话 (香港)'],
+                                        ['cmn-Hant-TW', '中文 (台灣)'],
+                                        ['yue-Hant-HK', '粵語 (香港)']],
+                    ['日本語',           ['ja-JP']],
+                    ['Lingua latīna',   ['la']]];
+        
+                    let select_language = document.querySelector('#select_language');
+                    let select_dialect = document.querySelector('#select_dialect');
+        
+                    for (var i = 0; i < langs.length; i++) {
+                    select_language.options[i] = new Option(langs[i][0], i);
+                    }
+        
+                    select_language.selectedIndex = 6;
+                    updateCountry();
+                    select_dialect.selectedIndex = 6;
+        
+                    function updateCountry() {
+                    for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+                        select_dialect.remove(i);
+                    }
+                    var list = langs[select_language.selectedIndex];
+                    for (var i = 1; i < list.length; i++) {
+                        select_dialect.options.add(new Option(list[i][1], list[i][0]));
+                    }
+                    select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+                    }
+        
+                </script>
+            </div>
+
+        </div>
+
+        
+    </div>
+    
+    <div class="Info">
+        <ul class = "ul_info" >
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">FAQs</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">© 2021 NÁSYP™️</a></li>
+            <li class = "info_language"><a href="#">Language</a></li>
+        </ul>                   
+    </div>
+
 </body>
 </html>
