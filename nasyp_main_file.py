@@ -21,7 +21,7 @@ from flask import Flask,render_template,Response,request,jsonify
 import time
 
 app = Flask(__name__)   
-camera = cv.VideoCapture(0)
+camera = cv.VideoCapture(1000)
 
 gesture_exist = False
 getVideo = False
@@ -30,7 +30,7 @@ queue = []
 outputList = []
 last_gesture = ["", 0]
 MAXIMUM_NUMBER_OF_CHARACTERS = 1000
-REQ_REPS = 5
+REQ_REPS = 16
 
 def get_args():
     parser = argparse.ArgumentParser()
