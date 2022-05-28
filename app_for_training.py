@@ -97,12 +97,41 @@ def main():
 
     #  ########################################################################
     mode = 0
-
+    alphabet = {
+        'a' : '1', 
+        'b' : '2', 
+        'c' : '3', 
+        'd' : '4', 
+        'e' : '5', 
+        'f' : '6', 
+        'g' : '7', 
+        'h' : '8', 
+        'i' : '9', 
+        'j' : '10', 
+        'k' : '11', 
+        'l' : '12', 
+        'm' : '13', 
+        'n' : '14', 
+        'o' : '15', 
+        'p' : '16', 
+        'q' : '17', 
+        'r' : '18', 
+        's' : '19', 
+        't' : '20', 
+        'u' : '21', 
+        'v' : '22', 
+        'w' : '23', 
+        'x' : '24', 
+        'y' : '25', 
+        'z' : '26'
+    }
     while True:
         fps = cvFpsCalc.get()
 
         # Process Key (ESC: end) #################################################
         key = cv.waitKey(10)
+        if key in alphabet.keys():
+            key = alphabet.get(key)
         if key == 27:  # ESC
             break
         number, mode = select_mode(key, mode)
@@ -182,15 +211,11 @@ def main():
 
 
 def select_mode(key, mode):
-    number = -1
-    if 48 <= key <= 57:  # 0 ~ 9
-        number = key - 48
-    if key == 110:  # n
-        mode = 0
+    number = 0
+    if 97 <= key <= 122:  # 0 ~ 9
+        number = key-97
     if key == 107:  # k
         mode = 1
-    if key == 104:  # h
-        mode = 2
     return number, mode
 
 
@@ -281,12 +306,12 @@ def pre_process_point_history(image, point_history):
 def logging_csv(number, mode, landmark_list, point_history_list):
     if mode == 0:
         pass
-    if mode == 1 and (0 <= number <= 9):
+    if mode == 1 and (1 <= number <= 27):
         csv_path = 'model/keypoint_classifier/keypoint.csv'
         with open(csv_path, 'a', newline="") as f:
             writer = csv.writer(f)
             writer.writerow([number, *landmark_list])
-    if mode == 2 and (0 <= number <= 9):
+    if mode == 2 and (1 <= number <= 27):
         csv_path = 'model/point_history_classifier/point_history.csv'
         with open(csv_path, 'a', newline="") as f:
             writer = csv.writer(f)
@@ -532,7 +557,7 @@ def draw_info(image, fps, mode, number):
         cv.putText(image, "MODE:" + mode_string[mode - 1], (10, 90),
                    cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1,
                    cv.LINE_AA)
-        if 0 <= number <= 9:
+        if 1 <= number <= 27:
             cv.putText(image, "NUM:" + str(number), (10, 110),
                        cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1,
                        cv.LINE_AA)
