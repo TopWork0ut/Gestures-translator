@@ -212,8 +212,8 @@ def main():
 
 def select_mode(key, mode):
     number = 0
-    if 97 <= key <= 122:  # 0 ~ 9
-        number = key-97
+    if 97 <= key <= 122:  # a ~ z
+        number = key-96
     if key == 107:  # k
         mode = 1
     return number, mode
