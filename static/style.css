@@ -47,18 +47,6 @@ a:hover{
     position: relative;
 }
 
-/*#image-a{
-    width: 800px;
-    height: 600px;
-    position: relative;
-    z-index: -1;
-    margin-top: 500px;
-}
-
-.background{
-
-}*/
-
 .menu{
     display: flex;
     cursor: pointer;
@@ -125,7 +113,7 @@ a:hover{
     cursor: pointer;
     font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     font-size: 16px;
-    font-weight: 600;*/
+    font-weight: 600;
     line-height: normal;
     min-height: 60px;
     min-width: 0;
@@ -149,7 +137,7 @@ a:hover{
     transform: translateY(0);
 }
 
-.Translation{
+/* .Translation{
     margin-top:20px;
     height: 550px; 
     width: 1000px;
@@ -161,10 +149,53 @@ a:hover{
     margin-bottom: 100px;
     background: #f0f0f5;
 
+}    */
+
+.Translation{
+    margin-top:20px;
+    height: 550px; 
+    width: 1000px;
+    /* border:2px solid black; */
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: start;
+    margin-bottom: 100px; 
+    /* background: #f0f0f5; */
+
+}  
+
+.Translation_left{
+    height: 550px; 
+    width: 700px;
+    /* border:2px solid black;  */
+    display: block;
+    
 }   
+
+.Translation_right{
+    height: 554px; 
+    width: 300px;
+    border:2px solid black;
+    display: block;
+    margin-left: 10px;
+    text-align: start;
+    background: #f0f0f5;
+}  
+
 
 #result{
     color: #000000;
+    width: 690px;
+    border:2px solid black; 
+    display: block;
+    text-align: start;
+    background: #f0f0f5;
+    font-family:Arial, Helvetica;
+    font-size: 30px;              
+    height: 550px;
+    resize:none;
+    outline:none;
 }
 
 .Info{
@@ -200,3 +231,4 @@ a:hover{
 .info_language{
     margin-left: 860px;
 }
+
